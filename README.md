@@ -117,4 +117,29 @@ resource "aws_key_pair" "instance_key_pair"{
 ```
 
 
+## Launch EC2 instance
+
+We are going to launch the EC2 instance with the Key and security group generated above. For now, we will be using the Amazon Linux AMI i.e` ami-005956c5f0f757d37`.
+
+```sh
+#Creating EC2 instance
+resource "aws_instance" "web_server" {
+        ami = "ami-005956c5f0f757d37"
+        instance_type = var.instance_type
+        security_groups = [aws_security_group.instance_sg.name]
+        key_name = aws_key_pair.instance_key_pair.key_name
+}
+```
+
+ 
+<p align="center">
+  <img src="/screenshots/terraform_create_key_pair.png" width="650" title="Create Key Pair">
+  <br>
+  <em>Fig .: Launching EC2 instance </em>
+</p>
+
+
+
+
+
  
