@@ -33,7 +33,7 @@ terraform init
 </p>
 
 
-## Create Key Pair and Security  Groups
+## Create Key Pair
 
 Currently Resource Type `aws_key_pair` supports importing an existing key pair but not creating a new key pair. So we will be creating a key pair in local system
 
@@ -74,5 +74,47 @@ resource "aws_key_pair" "instance_key_pair"{
   <br>
   <em>Fig 1.: Create Key Pair </em>
 </p>
+
+ 
+ ## Create Security  Groups
+ 
+ We will be allowing HTTP protocol and SSH access to our EC2 instance from worldwide.
+ 
+ ```sh
+ resource "aws_security_group" "instance_sg" {
+  name        = "web_server_ports"
+  description = "Apache Web Server Access Ports"
+
+  ingress {
+    description = "HTTP Server Access from worldwide"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "SSH Access from worldwide"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    #cidr_blocks = ["0.0.0.0/0"]
+    #cidr_blocks = [ file("/opt/ip.txt")]
+    cidr_blocks = [ var.automation_public_ip ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "application_security_group"
+  }
+
+}
+```
+
 
  
