@@ -16,6 +16,8 @@ Automated resource creation in AWS Public Cloud using Jenkins to execute terrafo
 2) create snapshot of ebs
 
 
+The website code that is used in this repository for deployment on EC2 web server Github URL[https://github.com/riteshsoni10/demo_website.git]
+
 ### Create IAM User in AWS Account
 ### Configure the AWS Profile in Jenkins System
 
@@ -139,7 +141,105 @@ resource "aws_instance" "web_server" {
 </p>
 
 
+## Create EBS Volume
+
+We will be creating EBS volume for data persistency i.e for permanent storage of our website code. The EBS volume should be launched in the same availability zone as the EC2 instance, otherwise the volume will not be attachable normally.
+
+```sh
+resource "aws_ebs_volume" "web_server_volume" {
+        availability_zone = aws_instance.web_server.availability_zone
+        size              = 1
+        tags = {
+                Name = "Web-Server"
+        }
+}
+```
+
+> Parameters:
+```
+	availability_zone => Availability Zone for the EBS Volume creation
+	size              => It defines the Volume Hard disk size requested
+```
+
+Attaching EBS Volume to the launched EC2 instance
+
+```sh
+resource "aws_volume_attachment" "ec2_volume_attach" {
+        device_name = "/dev/sdf"
+        volume_id   = aws_ebs_volume.web_server_volume.id
+        instance_id = aws_instance.web_server.id
+        force_detach = true
+}
+```
+
+> Parameters:
+```
+	device_name => The device name to expose to the instance
+	volume_id   => The Id of the EBS Volume Created
+	instance_id => Instance id of already launched instance
+	force_detach => This Option helps during teraing down of infrastructure, if the EBS volume is busy
+```
 
 
+## Configuration changes using Ansible Automation
 
- 
+We will be using automation of configuration changes i.e *installation* of packages, *clone* of code from github, *format* the EBS volume and *mount* it to */var/www/html*. The automation script is uploaded in the repository with name "configuration.yml". 
+
+The `local-exec` provisioner is used to invoke the ansible-playbook i.e ansible should be installed on the controller node. The provisioner should **always be inside a resource** block. So, if no resource is to be launched, then resource type `null_resource` comes to our rescue.
+
+```sh
+resource  "null_resource" "invoke_playbook"{
+	provisioner local-exec {
+			command = "ansible-playbook -u ${var.connection_user} -i ${aws_instance.web_server.public_ip}, --private-key /opt/keys/ec2 configuration.yml  --ssh-extra-args=\"-o stricthostkeychecking=no\""
+		}
+}
+```
+
+For code modularity, and clarification all the values are stored in `variables.tf` file and the values can be passed using `terraform.tf` file which the terraform loads and reads the values defined for the variables.
+
+>Parameters:
+```
+	command => to run or execute any command on the controller node, on condition that the command binary is installed or configured in the node controller system
+```
+
+`--ssh-extra-args=\"-o stricthostkeychecking=no\"`, parameter is configured to disable HostKeyChecking during Automation.
+
+The `remote-exec` provisioner is used to install python package required for automatio suing ansible. The null_resource of remote-exec is always executed first before any resource, i.e it takes precedence over other resource type. So, we need to tell or define the resource type on which the remote-exec provisioner depends, for example; in our scenario it depends on EBS volume attachment since we are executing local-exec and remote-exec in one resource block.
+
+The remote-exec provisioner requires connection object to connect to the remote system launched.
+
+```sh
+resource  "null_resource" "invoke_playbook"{
+        depends_on = [
+                aws_volume_attachment.ec2_volume_attach,
+        ]
+        connection{
+                type = var.connection_type
+                host = aws_instance.web_server.public_ip
+                user  = var.connection_user
+                private_key = file("/opt/keys/ec2")
+        }
+
+        provisioner remote-exec {
+                inline =[
+                        "sudo yum install python36 -y"
+		]
+	}
+}                                                 
+```
+> Parameters
+```
+	type        => Connection type i.e ssh (for Linux Operating System) or winRM (for Windows Operating System)
+	host        => Public IP or domain name of the remote system
+	user        => Username for the login
+	private_key => For authentication of the user. 
+	
+```
+We can also use **password** in case, we have configured password based auhentication rather thann Key Based authentication for Users login
+
+In `remote-exec` provisioners, we can use
+inline  => for providing commands in combination of multiple lines
+script  => Path of local script, that is to be copied to remote system and then executed.
+scripts => List of scripts that will be copied to remote system and then executed on remote.
+
+
