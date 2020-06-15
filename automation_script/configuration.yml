@@ -1,0 +1,42 @@
+---
+- hosts: all
+  gather_facts: false
+  connection: ssh
+  become: true
+  tasks:
+    - name: "Check if package manager is yum "
+      command: which yum
+      register: is_yum_configured
+      ignore_errors: true
+
+    - name: "Check if package manager in apt"
+      command: which apt
+      register: is_apt_configured
+      ignore_errors: true
+      when: is_yum_configured.rc == 1
+
+    - name: Package Installation using yum
+      yum:
+        name: ['httpd', 'php']
+        state: installed
+      become: true
+      become_method: sudo
+      ignore_errors: true
+      when: is_yum_configured.rc == 0
+
+    - name: "format Partition"
+      filesystem:
+        fstype: ext4
+        dev: /dev/xvdf
+
+    - name: "Mount the Volume in Web Server Directory"
+      mount:
+        fstype: ext4
+        src: /dev/xvdf
+        path: /var/www/html
+        state: mounted
+
+    - name: "Clone the Web Server Code"
+      git:
+        repo:
+        dest: /var/www/html
