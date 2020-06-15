@@ -17,7 +17,7 @@
 
     - name: Package Installation using yum
       yum:
-        name: ['httpd', 'php']
+        name: ['httpd', 'php', 'git']
         state: installed
       become: true
       become_method: sudo
@@ -26,17 +26,44 @@
 
     - name: "format Partition"
       filesystem:
-        fstype: ext4
+        fstype: xfs
         dev: /dev/xvdf
 
     - name: "Mount the Volume in Web Server Directory"
       mount:
-        fstype: ext4
+        fstype: xfs
         src: /dev/xvdf
         path: /var/www/html
         state: mounted
 
+    - name: "Clearing Code Directory before Cloning Repository"
+      file:
+        path: "/var/www/html/*"
+        state: absent
+      register: delete_status
+
+    - name: "File deletion status"
+      debug:
+        msg: "${{ delete_status }}"
+
     - name: "Clone the Web Server Code"
       git:
-        repo:
+        repo: https://github.com/riteshsoni10/demo_website.git
         dest: /var/www/html
+
+    - name: "Stopping Firewall on Host OS"
+      systemd:
+        name: firewalld
+        state: stopped
+        enabled: no
+      ignore_errors: true
+
+    - name: "Stopping SElinux "
+      shell: "setenforce 0"
+      ignore_errors: true
+
+    - name: "Staring Apache Web Server"
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
