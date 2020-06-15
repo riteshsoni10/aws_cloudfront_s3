@@ -1,4 +1,5 @@
-# aws_cloudfront_s3
+# Public Cloud (AWS) Infrastructure Automation
+
 Automated resource creation in AWS Public Cloud using Jenkins to execute terraform code.
 
 # List of Operations Perfomed in this project
@@ -29,7 +30,7 @@ terraform init
 
  
 <p align="center">
-  <img src="/screenshots/terraform_init.png" width="650" title="Initialising Terraform">
+  <img src="/screenshots/terraform_init.png" width="950" title="Initialising Terraform">
   <br>
   <em>Fig 1.: Initialisng Terraform </em>
 </p>
@@ -53,6 +54,29 @@ ssh-keygen	-t rsa -C mastersoni121995@gmai.com -f /opt/keys/ec2 -N ""
 	-N New Passphrase
 ```
 
+Terraform Validate to check for any syntax errors in Terraform Configuration file
+
+```sh
+terraform validate
+```
+
+<p align="center">
+  <img src="/screenshots/terraform_validate.png" width="950" title="Syntax Validation">
+  <br>
+  <em>Fig .: Terraform Validate </em>
+</p>
+
+
+
+
+
+<p align="center">
+  <img src="/screenshots/key_pair_generation.png" width="950" title="SSH-Keygen SSH Key Pair">
+  <br>
+  <em>Fig .: SSH Keygen Key Pair </em>
+</p>
+
+
 We will be storing the static variables in `terraform.tfvars` file i.e region_name and iam_profile
 
 Terraform loads variables in the following order, with later sources taking precedence over earlier ones:
@@ -72,7 +96,7 @@ resource "aws_key_pair" "instance_key_pair"{
 ```
  
 <p align="center">
-  <img src="/screenshots/terraform_create_key_pair.png" width="650" title="Create Key Pair">
+  <img src="/screenshots/terraform_create_key_pair.png" width="950" title="Create Key Pair">
   <br>
   <em>Fig 1.: Create Key Pair </em>
 </p>
@@ -135,7 +159,7 @@ resource "aws_instance" "web_server" {
 
  
 <p align="center">
-  <img src="/screenshots/terraform_create_key_pair.png" width="650" title="Create Key Pair">
+  <img src="/screenshots/terraform_create_ec2_instance.png" width="950" title="Create EC2 instance">
   <br>
   <em>Fig .: Launching EC2 instance </em>
 </p>
@@ -160,6 +184,15 @@ resource "aws_ebs_volume" "web_server_volume" {
 	availability_zone => Availability Zone for the EBS Volume creation
 	size              => It defines the Volume Hard disk size requested
 ```
+
+
+<p align="center">
+  <img src="/screenshots/terraform_create_ebs_volume.png" width="950" title="EBS Volume">
+  <br>
+  <em>Fig .: Create EBS Volume </em>
+</p>
+
+
 
 Attaching EBS Volume to the launched EC2 instance
 
@@ -251,6 +284,13 @@ In `remote-exec` provisioners, we can use any one of following attributes:
 	List of scripts that will be copied to remote system and then executed on remote.
 
 
+<p align="center">
+  <img src="/screenshots/terraform_invoke_ansible_playbook.png" width="950" title="Automation using Ansible">
+  <br>
+  <em>Fig .: Configuration and Installation of Web Server Packages </em>
+</p>
+
+
 ## S3 Bucket
 
 Create S3 bucket to serve images from S3 rather than from EC2 instance. The resource type `aws_s3_bucket` is used to create the S3 bucket.
@@ -319,15 +359,21 @@ resource "aws_s3_bucket_object" "website_image_files" {
 ```
 
 
+<p align="center">
+  <img src="/screenshots/terraform_upload_images.png" width="950" title="Upload Images">
+  <br>
+  <em>Fig .: Upload Images (Terraform Plan) </em>
+</p>
+
+
+<p align="center">
+  <img src="/screenshots/terraform_upload_images_success.png" width="950" title="Upload Images">
+  <br>
+  <em>Fig .: Upload Images (Terraform Apply) </em>
+</p>
+
+
 ## CloudFront Distribution
-
-#Creating Origin Access Identity
-
-resource "aws_cloudfront_origin_access_identity" "s3_objects" {
-        comment = "S3-Images-Source"
-}
-
-# Create CloudFront Distribution 
 
 Content Delivery Network as Service is provided using CloudFront in AWS Public Cloud. The cloudfront distribution is created to serve the images stored in S3 bucket with the lower latency across the globe. 
 
@@ -414,8 +460,6 @@ resource "null_resource" "configure_image_url" {
         depends_on = [
                 aws_cloudfront_distribution.image_distribution, null_resource.invoke_playbook
         ]
-
-
         connection{
                 type = var.connection_type
                 host = aws_instance.web_server.public_ip
@@ -425,11 +469,10 @@ resource "null_resource" "configure_image_url" {
 
         provisioner remote-exec {
                 inline =[
-                        "grep -rli 'images' * | xargs -i sed -i 's/images/https:\/\/${{aws_cloudfront_distribution.image_distribution.domain_name}/g' "
+                        "grep -rli 'images' * | xargs -i sed -i \ 
+			's+images+https://+${aws_cloudfront_distribution.image_distribution.domain_name}+g' "
                 ]
         }
-
-
 }
 ```
 
