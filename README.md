@@ -272,8 +272,8 @@ resource "aws_s3_bucket" "s3_image_store" {
 	bucket        => The Bucket name 
 	acl           => The ACL for the objects stored in the bucket,
 	region        => The region in which the S3 bucket will be created
-	force_destroy => This boolean parameter, deletes all the objects in the bucket during tearing down of infrastructure.
-			Do not use this parameter in PRODUCTION environment
+	force_destroy => This boolean parameter, deletes all the objects in the bucket during tearing down
+			 of infrastructure. Do not use this parameter in PRODUCTION environment
 ```
 
 ## Upload Images to S3 bucket
@@ -327,7 +327,7 @@ resource "aws_cloudfront_origin_access_identity" "s3_objects" {
         comment = "S3-Images-Source"
 }
 
-# Create CloudFront Distribution for Images source from S3 Bucket
+# Create CloudFront Distribution 
 
 Content Delivery Network as Service is provided using CloudFront in AWS Public Cloud. The cloudfront distribution is created to serve the images stored in S3 bucket with the lower latency across the globe. 
 
@@ -352,7 +352,7 @@ resource "aws_cloudfront_distribution" "image_distribution" {
                 domain_name = aws_s3_bucket.s3_image_store.bucket_regional_domain_name
                 origin_id = var.s3_origin_id
                 s3_origin_config {
-                        origin_access_identity = aws_cloudfront_origin_access_identity.s3_objects.cloudfront_access_identity_path
+                  origin_access_identity = aws_cloudfront_origin_access_identity.s3_objects.cloudfront_access_identity_path
                 }
         }
         enabled = true
@@ -395,10 +395,41 @@ resource "aws_cloudfront_distribution" "image_distribution" {
 ```
 	origin              => Configuration for the origin. It can be S3, ELB, EC2 instance etc.
 	domain_name         => domain name over which the origin can accessed
-	geo_restriction     => The website or the content delivered using CDN can be blocked or whitelisted in certain countries.
+	geo_restriction     => The website or the content delivered using CDN can be blocked or 
+				whitelisted in certain countries.
 	price_class         => Determines the deployment of code in edge_locations
 	viewer_certificate  => SSL Certificate  for the viewer access. 
 	wait_for_deployment => Boolean Parameter to wait until the Distribution status is deployed
 ```
 
 We have used Cloudfront's, but custom aliases and SSL certificates can also be used
+
+
+## Configure Wesbite to use CDN domain 
+
+We will be using remote-exec provisioner to replace the src with CDN domain name. The resource will be dependent on CDN and invoke playbook resource
+
+```sh
+resource "null_resource" "configure_image_url" {
+        depends_on = [
+                aws_cloudfront_distribution.image_distribution, null_resource.invoke_playbook
+        ]
+
+
+        connection{
+                type = var.connection_type
+                host = aws_instance.web_server.public_ip
+                user  = var.connection_user
+                private_key = file("/opt/keys/ec2")
+        }
+
+        provisioner remote-exec {
+                inline =[
+                        "grep -rli 'images' * | xargs -i sed -i 's/images/https:\/\/${{aws_cloudfront_distribution.image_distribution.domain_name}/g' "
+                ]
+        }
+
+
+}
+```
+
