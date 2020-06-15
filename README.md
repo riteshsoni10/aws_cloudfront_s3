@@ -190,8 +190,9 @@ The `local-exec` provisioner is used to invoke the ansible-playbook i.e ansible 
 ```sh
 resource  "null_resource" "invoke_playbook"{
 	provisioner local-exec {
-			command = "ansible-playbook -u ${var.connection_user} -i ${aws_instance.web_server.public_ip}, --private-key /opt/keys/ec2 configuration.yml  --ssh-extra-args=\"-o stricthostkeychecking=no\""
-		}
+		command = "ansible-playbook -u ${var.connection_user} -i ${aws_instance.web_server.public_ip},\
+		--private-key /opt/keys/ec2 configuration.yml  --ssh-extra-args=\"-o stricthostkeychecking=no\""
+	}
 }
 ```
 
@@ -199,10 +200,11 @@ For code modularity, and clarification all the values are stored in `variables.t
 
 >Parameters:
 ```
-	command => to run or execute any command on the controller node, on condition that the command binary is installed or configured in the node controller system
+	command => to run or execute any command on the controller node, 
+	on condition that the command binary is installed or configured in the node controller system
 ```
 
-`--ssh-extra-args=\"-o stricthostkeychecking=no\"`, parameter is configured to disable HostKeyChecking during Automation.
+`--ssh-extra-args="-o stricthostkeychecking=no"`, parameter is configured to disable HostKeyChecking during Automation.
 
 The `remote-exec` provisioner is used to install python package required for automatio suing ansible. The null_resource of remote-exec is always executed first before any resource, i.e it takes precedence over other resource type. So, we need to tell or define the resource type on which the remote-exec provisioner depends, for example; in our scenario it depends on EBS volume attachment since we are executing local-exec and remote-exec in one resource block.
 
@@ -233,13 +235,85 @@ resource  "null_resource" "invoke_playbook"{
 	host        => Public IP or domain name of the remote system
 	user        => Username for the login
 	private_key => For authentication of the user. 
-	
 ```
-We can also use **password** in case, we have configured password based auhentication rather thann Key Based authentication for Users login
+We can also use **password** in case, we have configured password based authentication rather than Key Based authentication for User login
 
-In `remote-exec` provisioners, we can use
-inline  => for providing commands in combination of multiple lines
-script  => Path of local script, that is to be copied to remote system and then executed.
-scripts => List of scripts that will be copied to remote system and then executed on remote.
+In `remote-exec` provisioners, we can use any one of following attributes: 
+
+1. inline
+
+	It helps in providing commands in combination of multiple lines
+2. script  
+
+	Path of local script, that is to be copied to remote system and then executed.
+3. scripts 
+	
+	List of scripts that will be copied to remote system and then executed on remote.
 
 
+## S3 Bucket
+
+Create S3 bucket to serve images from S3 rather than from EC2 instance. The resource type `aws_s3_bucket` is used to create the S3 bucket.
+
+```sh
+resource "aws_s3_bucket" "s3_image_store" {
+        bucket = var.s3_image_bucket_name
+        acl = var.bucket_acl
+        tags = {
+                Name = "WebPage Image Source"
+        }
+        region = var.region_name
+        force_destroy = var.force_destroy_bucket
+}
+```
+
+>Parameters:
+```
+	bucket        => The Bucket name 
+	acl           => The ACL for the objects stored in the bucket,
+	region        => The region in which the S3 bucket will be created
+	force_destroy => This boolean parameter, deletes all the objects in the bucket during tearing down of infrastructure.
+			Do not use this parameter in PRODUCTION environment
+```
+
+## Upload Images to S3 bucket
+
+The Images stored in the wbsite code repository, is uploaded in S3 for serving the images from Cloudfront. Content Delivery Network helps in lowering the latency of accessing of objects i.e image access time will be reduced, if accessed from another region.
+
+For uploading the images, we will be cloning the repository in current workspace using `local-exec` provisioner and then will be uploading only the images to the S3 bucket
+
+```sh
+resource "null_resource" "download_website_code"{
+        depends_on = [
+                aws_s3_bucket.s3_image_store
+        ]
+        provisioner local-exec {
+                command = "git clone https://github.com/riteshsoni10/demo_website.git"
+        }
+}
+```
+
+Uploading all the images to S3 Bucket
+```sh
+resource "aws_s3_bucket_object" "website_image_files" {
+        depends_on = [
+                null_resource.download_website_code
+        ]
+        for_each      = fileset("demo_website/images/", "**/*.*")
+        bucket        = aws_s3_bucket.s3_image_store.bucket
+        key           = replace(each.value, "demo_website/images/", "")
+        source        = "demo_website/images/${each.value}"
+        acl           = "public-read"
+        etag          = filemd5("demo_website/images/${each.value}")
+}
+```
+
+>Paramters:
+```
+	for_each =>  to get list of all the images
+	bucket   => Name of the bucket to upload the images
+	key      => The file name on S3 after uploading the image
+	source   => The source of the images
+	acl      => The Access Control on the images
+	etag     => To keep in track the and alwways upload data as soon as it changes
+```
