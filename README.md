@@ -308,7 +308,7 @@ resource "aws_s3_bucket_object" "website_image_files" {
 }
 ```
 
->Paramters:
+>Parameters:
 ```
 	for_each =>  to get list of all the images
 	bucket   => Name of the bucket to upload the images
@@ -317,3 +317,88 @@ resource "aws_s3_bucket_object" "website_image_files" {
 	acl      => The Access Control on the images
 	etag     => To keep in track the and alwways upload data as soon as it changes
 ```
+
+
+## CloudFront Distribution
+
+#Creating Origin Access Identity
+
+resource "aws_cloudfront_origin_access_identity" "s3_objects" {
+        comment = "S3-Images-Source"
+}
+
+# Create CloudFront Distribution for Images source from S3 Bucket
+
+Content Delivery Network as Service is provided using CloudFront in AWS Public Cloud. The cloudfront distribution is created to serve the images stored in S3 bucket with the lower latency across the globe. 
+
+First we will be creating Origin Access Identity, which will be helpfulin hiding S3 endpoint publicly to the world.
+
+```sh
+resource "aws_cloudfront_origin_access_identity" "s3_objects" {
+        comment = "S3-Images-Source"
+}
+```
+
+Create Cloudfront Distribution
+
+The Web Cloudfront Distribution is created to serve objects over http or https protocol.
+
+```sh
+resource "aws_cloudfront_distribution" "image_distribution" {
+        depends_on = [
+                aws_s3_bucket.s3_image_store
+        ]
+        origin {
+                domain_name = aws_s3_bucket.s3_image_store.bucket_regional_domain_name
+                origin_id = var.s3_origin_id
+                s3_origin_config {
+                        origin_access_identity = aws_cloudfront_origin_access_identity.s3_objects.cloudfront_access_identity_path
+                }
+        }
+        enabled = true
+        is_ipv6_enabled = true
+        default_cache_behavior {
+                allowed_methods  = var.cache_allowed_methods
+                cached_methods   = var.cached_methods
+                target_origin_id = var.s3_origin_id
+                forwarded_values {
+                        query_string = false
+                        cookies {
+                                forward = "none"
+                        }
+                }
+                viewer_protocol_policy =  var.viewer_protocol_policy
+                min_ttl                = var.min_ttl
+                default_ttl            = var.default_ttl
+                max_ttl                = var.max_ttl
+                compress               = var.compression_objects_enable
+        }
+        wait_for_deployment = var.wait_for_deployment
+        price_class = var.price_class
+        restrictions {
+                geo_restriction {
+                        restriction_type = var.geo_restriction_type
+                        locations        = var.geo_restriction_locations
+                }
+        }
+        tags = {
+                Environment = "test-Environment"
+        }
+        viewer_certificate {
+                 cloudfront_default_certificate = true
+        }
+
+}
+```
+
+>Parameters:
+```
+	origin              => Configuration for the origin. It can be S3, ELB, EC2 instance etc.
+	domain_name         => domain name over which the origin can accessed
+	geo_restriction     => The website or the content delivered using CDN can be blocked or whitelisted in certain countries.
+	price_class         => Determines the deployment of code in edge_locations
+	viewer_certificate  => SSL Certificate  for the viewer access. 
+	wait_for_deployment => Boolean Parameter to wait until the Distribution status is deployed
+```
+
+We have used Cloudfront's, but custom aliases and SSL certificates can also be used
