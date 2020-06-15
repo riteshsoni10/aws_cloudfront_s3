@@ -2,7 +2,8 @@
 
 Automated resource creation in AWS Public Cloud using Jenkins to execute terraform code.
 
-# List of Operations Perfomed in this project
+
+## Scope of this project
 1. Create the key and security group which allow the port 80.
 2. Launch EC2 instance.
 3. In this Ec2 instance use the key and security group which we have created in step 1.
@@ -19,10 +20,12 @@ Automated resource creation in AWS Public Cloud using Jenkins to execute terrafo
 
 The website code that is used in this repository for deployment on EC2 web server [Github URL](https://github.com/riteshsoni10/demo_website.git)
 
+
 ## Package Pre-Requisites
 - awscli 
 - terraform
 - git
+
 
 ### Create IAM User in AWS Account
 
@@ -369,6 +372,7 @@ resource "aws_s3_bucket" "s3_image_store" {
 			 of infrastructure. Do not use this parameter in PRODUCTION environment
 ```
 
+
 ## Upload Images to S3 bucket
 
 The Images stored in the wbsite code repository, is uploaded in S3 for serving the images from Cloudfront. Content Delivery Network helps in lowering the latency of accessing of objects i.e image access time will be reduced, if accessed from another region.
@@ -528,6 +532,7 @@ resource "null_resource" "configure_image_url" {
         }
 }
 ```
+
 
 # Usage Instructions
 You should have configured IAM profile in the controller node by following instructions.
