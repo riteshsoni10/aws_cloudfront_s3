@@ -56,9 +56,23 @@ The website code that is used in this repository for deployment on EC2 web serve
 
 7. Copy Access and Secret Key Credentials
 
-### Configure the AWS Profile in Jenkins System
 
-Initalising Terraform in workspace Directory
+### Configure the AWS Profile in Controller Node
+
+The best and secure way to configure AWS Secret and Access Key is by using aws cli on the controller node
+
+```sh
+aws configure --profile <profile_name>
+```
+
+<p align="center">
+  <img src="/screenshots/aws_profile_creation.png" width="950" title="AWS Profile">
+  <br>
+  <em>Fig 4.: Configure AWS Profile </em>
+</p>
+
+
+**Initalising Terraform in workspace Directory**
 
 ```sh
 terraform init 
@@ -68,7 +82,7 @@ terraform init
 <p align="center">
   <img src="/screenshots/terraform_init.png" width="950" title="Initialising Terraform">
   <br>
-  <em>Fig 4.: Initialisng Terraform </em>
+  <em>Fig 5.: Initialisng Terraform </em>
 </p>
 
 
@@ -90,6 +104,13 @@ ssh-keygen	-t rsa -C mastersoni121995@gmai.com -f /opt/keys/ec2 -N ""
 	-N New Passphrase
 ```
 
+<p align="center">
+  <img src="/screenshots/key_pair_generation.png" width="950" title="SSH-Keygen SSH Key Pair">
+  <br>
+  <em>Fig 6.: SSH Keygen Key Pair </em>
+</p>
+
+
 Terraform Validate to check for any syntax errors in Terraform Configuration file
 
 ```sh
@@ -99,17 +120,7 @@ terraform validate
 <p align="center">
   <img src="/screenshots/terraform_validate.png" width="950" title="Syntax Validation">
   <br>
-  <em>Fig 5.: Terraform Validate </em>
-</p>
-
-
-
-
-
-<p align="center">
-  <img src="/screenshots/key_pair_generation.png" width="950" title="SSH-Keygen SSH Key Pair">
-  <br>
-  <em>Fig 6.: SSH Keygen Key Pair </em>
+  <em>Fig 7.: Terraform Validate </em>
 </p>
 
 
@@ -134,7 +145,7 @@ resource "aws_key_pair" "instance_key_pair"{
 <p align="center">
   <img src="/screenshots/terraform_create_key_pair.png" width="950" title="Create Key Pair">
   <br>
-  <em>Fig 7.: Create Key Pair </em>
+  <em>Fig 8.: Create Key Pair </em>
 </p>
 
  
@@ -197,7 +208,7 @@ resource "aws_instance" "web_server" {
 <p align="center">
   <img src="/screenshots/terraform_create_ec2_instance.png" width="950" title="Create EC2 instance">
   <br>
-  <em>Fig 8.: Launching EC2 instance </em>
+  <em>Fig 9.: Launching EC2 instance </em>
 </p>
 
 
@@ -225,9 +236,8 @@ resource "aws_ebs_volume" "web_server_volume" {
 <p align="center">
   <img src="/screenshots/terraform_create_ebs_volume.png" width="950" title="EBS Volume">
   <br>
-  <em>Fig 9.: Create EBS Volume </em>
+  <em>Fig 10.: Create EBS Volume </em>
 </p>
-
 
 
 Attaching EBS Volume to the launched EC2 instance
@@ -307,6 +317,13 @@ resource  "null_resource" "invoke_playbook"{
 ```
 We can also use **password** in case, we have configured password based authentication rather than Key Based authentication for User login
 
+<p align="center">
+  <img src="/screenshots/terraform_install_python3_in_remote.png" width="950" title="Automation using Ansible">
+  <br>
+  <em>Fig 11.: Installation of Python Packages </em>
+</p>
+
+
 In `remote-exec` provisioners, we can use any one of following attributes: 
 
 1. inline
@@ -323,7 +340,7 @@ In `remote-exec` provisioners, we can use any one of following attributes:
 <p align="center">
   <img src="/screenshots/terraform_invoke_ansible_playbook.png" width="950" title="Automation using Ansible">
   <br>
-  <em>Fig 10.: Configuration and Installation of Web Server Packages </em>
+  <em>Fig 12.: Configuration and Installation of Web Server Packages </em>
 </p>
 
 
@@ -398,14 +415,14 @@ resource "aws_s3_bucket_object" "website_image_files" {
 <p align="center">
   <img src="/screenshots/terraform_upload_images.png" width="950" title="Upload Images">
   <br>
-  <em>Fig 11.: Upload Images (Terraform Plan) </em>
+  <em>Fig 13.: Upload Images (Terraform Plan) </em>
 </p>
 
 
 <p align="center">
   <img src="/screenshots/terraform_upload_images_success.png" width="950" title="Upload Images">
   <br>
-  <em>Fig 12.: Upload Images (Terraform Apply) </em>
+  <em>Fig 14.: Upload Images (Terraform Apply) </em>
 </p>
 
 
