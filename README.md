@@ -17,7 +17,7 @@ Automated resource creation in AWS Public Cloud using Jenkins to execute terrafo
 2) create snapshot of ebs
 
 
-The website code that is used in this repository for deployment on EC2 web server Github URL[https://github.com/riteshsoni10/demo_website.git]
+The website code that is used in this repository for deployment on EC2 web server [Github URL](https://github.com/riteshsoni10/demo_website.git)
 
 ## Package Pre-Requisites
 - awscli 
@@ -528,4 +528,23 @@ resource "null_resource" "configure_image_url" {
         }
 }
 ```
+
+# Usage Instructions
+You should have configured IAM profile in the controller node by following instructions.
+
+1. Clone this repository
+2. Change the working directory to `automation_script`
+3. Run `terraform init`
+4. Then, `terraform plan`, to see the list of resources that will be created
+5. Then, `terraform apply -auto-approve`
+
+When you are done playing
+```sh
+terraform destroy -auto-approve
+```
+
+
+> **Source**: LinuxWorld Informatics Pvt Ltd. Jaipur
+>
+> **Under the Guidance of** : [Vimal Daga](https://in.linkedin.com/in/vimaldaga)
 
