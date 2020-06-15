@@ -19,7 +19,43 @@ Automated resource creation in AWS Public Cloud using Jenkins to execute terrafo
 
 The website code that is used in this repository for deployment on EC2 web server Github URL[https://github.com/riteshsoni10/demo_website.git]
 
+## Package Pre-Requisites
+- awscli 
+- terraform
+- git
+
 ### Create IAM User in AWS Account
+
+1. Login using root account into AWS Console
+2. Go to IAM Service
+
+<p align="center">
+  <img src="/screenshots/iam_user_creation.png" width="950" title="IAM Service">
+  <br>
+  <em>Fig 1.: IAM User creation </em>
+</p>
+
+3. Click on User
+4. Add User
+5. Enable Access type `Programmatic Access`
+
+<p align="center">
+  <img src="/screenshots/iam_user_details.png" width="950" title="Add User">
+  <br>
+  <em>Fig 2.: Add new User </em>
+</p>
+
+6. Attach Policies to the account
+	For now, you can click on `Attach existing policies directly` and attach `Administrator Access`
+
+<p align="center">
+  <img src="/screenshots/iam_user_policy_attach.png" width="950" title="User Policies">
+  <br>
+  <em>Fig 3.: IAM User policies </em>
+</p>
+
+7. Copy Access and Secret Key Credentials
+
 ### Configure the AWS Profile in Jenkins System
 
 Initalising Terraform in workspace Directory
@@ -32,7 +68,7 @@ terraform init
 <p align="center">
   <img src="/screenshots/terraform_init.png" width="950" title="Initialising Terraform">
   <br>
-  <em>Fig 1.: Initialisng Terraform </em>
+  <em>Fig 4.: Initialisng Terraform </em>
 </p>
 
 
@@ -63,7 +99,7 @@ terraform validate
 <p align="center">
   <img src="/screenshots/terraform_validate.png" width="950" title="Syntax Validation">
   <br>
-  <em>Fig .: Terraform Validate </em>
+  <em>Fig 5.: Terraform Validate </em>
 </p>
 
 
@@ -73,7 +109,7 @@ terraform validate
 <p align="center">
   <img src="/screenshots/key_pair_generation.png" width="950" title="SSH-Keygen SSH Key Pair">
   <br>
-  <em>Fig .: SSH Keygen Key Pair </em>
+  <em>Fig 6.: SSH Keygen Key Pair </em>
 </p>
 
 
@@ -98,7 +134,7 @@ resource "aws_key_pair" "instance_key_pair"{
 <p align="center">
   <img src="/screenshots/terraform_create_key_pair.png" width="950" title="Create Key Pair">
   <br>
-  <em>Fig 1.: Create Key Pair </em>
+  <em>Fig 7.: Create Key Pair </em>
 </p>
 
  
@@ -161,7 +197,7 @@ resource "aws_instance" "web_server" {
 <p align="center">
   <img src="/screenshots/terraform_create_ec2_instance.png" width="950" title="Create EC2 instance">
   <br>
-  <em>Fig .: Launching EC2 instance </em>
+  <em>Fig 8.: Launching EC2 instance </em>
 </p>
 
 
@@ -189,7 +225,7 @@ resource "aws_ebs_volume" "web_server_volume" {
 <p align="center">
   <img src="/screenshots/terraform_create_ebs_volume.png" width="950" title="EBS Volume">
   <br>
-  <em>Fig .: Create EBS Volume </em>
+  <em>Fig 9.: Create EBS Volume </em>
 </p>
 
 
@@ -287,7 +323,7 @@ In `remote-exec` provisioners, we can use any one of following attributes:
 <p align="center">
   <img src="/screenshots/terraform_invoke_ansible_playbook.png" width="950" title="Automation using Ansible">
   <br>
-  <em>Fig .: Configuration and Installation of Web Server Packages </em>
+  <em>Fig 10.: Configuration and Installation of Web Server Packages </em>
 </p>
 
 
@@ -362,14 +398,14 @@ resource "aws_s3_bucket_object" "website_image_files" {
 <p align="center">
   <img src="/screenshots/terraform_upload_images.png" width="950" title="Upload Images">
   <br>
-  <em>Fig .: Upload Images (Terraform Plan) </em>
+  <em>Fig 11.: Upload Images (Terraform Plan) </em>
 </p>
 
 
 <p align="center">
   <img src="/screenshots/terraform_upload_images_success.png" width="950" title="Upload Images">
   <br>
-  <em>Fig .: Upload Images (Terraform Apply) </em>
+  <em>Fig 12.: Upload Images (Terraform Apply) </em>
 </p>
 
 
