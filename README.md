@@ -2,6 +2,11 @@
 
 Automated resource creation in AWS Public Cloud using Jenkins to execute terraform code.
 
+<p align="center">
+  <img src="/screenshots/infra_flow.png" width="950" title="Infrastructure Flow">
+  <br>
+  <em>Fig 1.: Project Flow Diagram </em>
+</p>
 
 ## Scope of this project
 1. Create the key and security group which allow the port 80.
@@ -18,9 +23,9 @@ Automated resource creation in AWS Public Cloud using Jenkins to execute terrafo
 2) create snapshot of ebs
 
 
-The website code that is used in this repository for deployment on EC2 web server [Github URL](https://github.com/riteshsoni10/demo_website.git)
+The **website code** that is used in this repository for *deployment* on EC2 web server [Github URL](https://github.com/riteshsoni10/demo_website.git)
 
-
+ 	
 ## Package Pre-Requisites
 - awscli 
 - terraform
