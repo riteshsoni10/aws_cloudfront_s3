@@ -127,28 +127,17 @@ resource "aws_s3_bucket" "s3_image_store" {
 }
 
 
-# Cloning git code repository
-resource "null_resource" "download_website_code"{
-        depends_on = [
-                aws_s3_bucket.s3_image_store
-        ]
-        provisioner local-exec {
-                command = "git clone https://github.com/riteshsoni10/demo_website.git"
-        }
-}
-
-
 # Upload all the website images to S3 bucket
 resource "aws_s3_bucket_object" "website_files" {
         depends_on = [
                 null_resource.download_website_code,
         ]
-        for_each      = fileset("demo_website/images/", "**/*.*")
+        for_each      = fileset("/opt/images/", "**/*.*")
         bucket        = aws_s3_bucket.s3_image_store.bucket
-        key           = replace(each.value, "demo_website/images/", "")
-        source        = "demo_website/images/${each.value}"
+        key           = replace(each.value, "/opt/images/", "")
+        source        = "/opt/images/${each.value}"
         acl           = "public-read"
-        etag          = filemd5("demo_website/images/${each.value}")
+        etag          = filemd5("/opt/images/${each.value}")
 }
 
 
