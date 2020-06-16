@@ -527,7 +527,7 @@ resource "null_resource" "configure_image_url" {
         provisioner remote-exec {
                 inline =[
                         "grep -rli 'images' * | xargs -i sed -i \ 
-			's+images+https://+${aws_cloudfront_distribution.image_distribution.domain_name}+g' "
+			's+images+https://${aws_cloudfront_distribution.image_distribution.domain_name}+g' "
                 ]
         }
 }
