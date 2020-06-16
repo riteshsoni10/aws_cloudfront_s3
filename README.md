@@ -609,25 +609,26 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 1. Create a Job to copy images from the code repository
 2. Create a Job for AWS Infrastructure Automation
 
+
 ### Job1: Code Deployment
 
-1. Create new Freestyle Job with name code_deployment
+1. **Create new Freestyle Job with name code_deployment**
 
 <p align="center">
   <img src="/screenshots/code_deployment.png" width="950" title="Code Deployment Job">
   <br>
-  <em>Fig 16.: Job Creation </em>
+  <em>Fig 16.:  Job Creation </em>
 </p>
 
-2. Configure Project URL
+2. **Configure Project URL**
 
 <p align="center">
   <img src="/screenshots/code_deployment_project_description.png" width="950" title="Project URL Configuration">
   <br>
-  <em>Fig 17.: Project URL Configuration </em>
+  <em>Fig 17.:  Project URL Configuration </em>
 </p>
 
-3. Configure Git SCM 
+3. **Configure Git SCM** 
 
 <p align="center">
   <img src="/screenshots/code_deployment_project_description.png" width="950" title="Github Repository Configuration">
@@ -635,9 +636,9 @@ Now, if you want to get yourself relieved from all the manual terraform commands
   <em>Fig 18.:  GitHub Repository Configuration </em>
 </p>
 
-4. Configure Build Triggers
+4. **Configure Build Triggers**
 
-Currently we don't have public connectivity from Github to local Jenkins Server. So, we will be using *Poll SCM* as trigger.
+	Currently we don't have public connectivity from Github to local Jenkins Server. So, we will be using *Poll SCM* as trigger.
 
 <p align="center">
   <img src="/screenshots/code_deployment_build_triggers.png" width="950" title="Build Trigger Configuration">
@@ -645,9 +646,9 @@ Currently we don't have public connectivity from Github to local Jenkins Server.
   <em>Fig 19.:  Build Trigger Configuration </em>
 </p>
 
-5. Build Step
+5. **Build Step**
 
-Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is present in the repository at location *jenkins_script/code_deployment.sh*
+	Click on `Execute Shell` from the `Add Build Step` dropdown. The Bash script is present in the repository at location *jenkins_script/code_deployment.sh*
 
 <p align="center">
   <img src="/screenshots/code_deployment_build_step.png" width="950" title="Build Step Configuration">
@@ -655,13 +656,14 @@ Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is 
   <em>Fig 20.:  Build Step Configuration </em>
 </p>
 
-6. Save and Apply
+6. **Save and Apply**
+
 
 ## Job2 : Infrastructure Deployement
 
 1. Same as in `Job1`
 
-2. Configure Project URL
+2. **Configure Project URL**
 
 <p align="center">
   <img src="/screenshots/infrastructure_deployment_description.png" width="950" title="Project URL">
@@ -669,7 +671,7 @@ Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is 
   <em>Fig 21.:  Project URL </em>
 </p>
 
-3. Git Configuration
+3. **Git Configuration**
 
 <p align="center">
   <img src="/screenshots/infrastructure_deployment_scm.png" width="950" title="SCM">
@@ -677,7 +679,7 @@ Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is 
   <em>Fig 22.:  Source Code Management </em>
 </p>
 
-4. Build Trigger
+4. **Build Trigger**
 
 	The job will be triggered only on successful/stable execution of `code_deployment` Job.
 	
@@ -687,17 +689,19 @@ Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is 
   <em>Fig 23.:  Build Trigger Configuration </em>
 </p>
 
-5. Build Step
+5. **Build Step**
 
 	In Build Step we will be copying our automation code in `/opt/aws_infra` directory. The directory will help us in maintaining the terraform state. We can also upload the terraform state to S3 and utilise whenver a build is triggered. The bash script is present in repository at location *jenkins_script/infrastructure_deployment.sh*
 	
 <p align="center">
   <img src="/screenshots/infrastructure_deployment_build.png" width="950" title="Build Step Configuration">
   <br>
-  <em>Fig 20.:  Build Step </em>
+  <em>Fig 24.:  Build Step </em>
 </p>
 
-6. Save and Apply
+6. **Save and Apply**
+
+
 
 
 > **Source**: LinuxWorld Informatics Pvt Ltd. Jaipur
