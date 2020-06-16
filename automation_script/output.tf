@@ -7,7 +7,6 @@ output "security_group_name" {
         value = aws_security_group.instance_sg.name
 }
 
-
 output "ec2_instance_public_ip"{
         value = aws_instance.web_server.public_ip
 }
@@ -16,18 +15,17 @@ output "ebs_volume"{
         value = aws_ebs_volume.web_server_volume.id
 }
 
-output "s3_bucket_details" {
-        value = aws_s3_bucket.s3_image_store
+output "s3_bucket_name" {
+        value = aws_s3_bucket.s3_image_store.bucket
+}
+
+output "s3_bucket_domain_name" {
+        value = aws_s3_bucket.s3_image_store.bucket_domain_name
 }
 
 output "cf_id" {
   value       = aws_cloudfront_distribution.image_distribution.id
   description = "ID of AWS CloudFront distribution"
-}
-
-output "cf_arn" {
-  value       = aws_cloudfront_distribution.image_distribution.arn
-  description = "ARN of AWS CloudFront distribution"
 }
 
 output "cf_status" {
