@@ -458,8 +458,8 @@ resource "aws_cloudfront_distribution" "image_distribution" {
                   origin_access_identity = aws_cloudfront_origin_access_identity.s3_objects.cloudfront_access_identity_path
                 }
         }
-        enabled = true
-        is_ipv6_enabled = true
+        enabled = var.enabled
+        is_ipv6_enabled = var.ipv6_enabled
         default_cache_behavior {
                 allowed_methods  = var.cache_allowed_methods
                 cached_methods   = var.cached_methods
