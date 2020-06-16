@@ -40,7 +40,7 @@ The **website code** that is used in this repository for *deployment* on EC2 web
 <p align="center">
   <img src="/screenshots/iam_user_creation.png" width="950" title="IAM Service">
   <br>
-  <em>Fig 1.: IAM User creation </em>
+  <em>Fig 2.: IAM User creation </em>
 </p>
 
 3. Click on User
@@ -50,7 +50,7 @@ The **website code** that is used in this repository for *deployment* on EC2 web
 <p align="center">
   <img src="/screenshots/iam_user_details.png" width="950" title="Add User">
   <br>
-  <em>Fig 2.: Add new User </em>
+  <em>Fig 3.: Add new User </em>
 </p>
 
 6. Attach Policies to the account
@@ -59,7 +59,7 @@ The **website code** that is used in this repository for *deployment* on EC2 web
 <p align="center">
   <img src="/screenshots/iam_user_policy_attach.png" width="950" title="User Policies">
   <br>
-  <em>Fig 3.: IAM User policies </em>
+  <em>Fig 4.: IAM User policies </em>
 </p>
 
 7. Copy Access and Secret Key Credentials
@@ -76,7 +76,7 @@ aws configure --profile <profile_name>
 <p align="center">
   <img src="/screenshots/aws_profile_creation.png" width="950" title="AWS Profile">
   <br>
-  <em>Fig 4.: Configure AWS Profile </em>
+  <em>Fig 5.: Configure AWS Profile </em>
 </p>
 
 
@@ -90,7 +90,7 @@ terraform init
 <p align="center">
   <img src="/screenshots/terraform_init.png" width="950" title="Initialising Terraform">
   <br>
-  <em>Fig 5.: Initialisng Terraform </em>
+  <em>Fig 6.: Initialisng Terraform </em>
 </p>
 
 
@@ -115,7 +115,7 @@ ssh-keygen	-t rsa -C mastersoni121995@gmai.com -f /opt/keys/ec2 -N ""
 <p align="center">
   <img src="/screenshots/key_pair_generation.png" width="950" title="SSH-Keygen SSH Key Pair">
   <br>
-  <em>Fig 6.: SSH Keygen Key Pair </em>
+  <em>Fig 7.: SSH Keygen Key Pair </em>
 </p>
 
 
@@ -128,7 +128,7 @@ terraform validate
 <p align="center">
   <img src="/screenshots/terraform_validate.png" width="950" title="Syntax Validation">
   <br>
-  <em>Fig 7.: Terraform Validate </em>
+  <em>Fig 8.: Terraform Validate </em>
 </p>
 
 
@@ -153,7 +153,7 @@ resource "aws_key_pair" "instance_key_pair"{
 <p align="center">
   <img src="/screenshots/terraform_create_key_pair.png" width="950" title="Create Key Pair">
   <br>
-  <em>Fig 8.: Create Key Pair </em>
+  <em>Fig 9.: Create Key Pair </em>
 </p>
 
  
@@ -216,7 +216,7 @@ resource "aws_instance" "web_server" {
 <p align="center">
   <img src="/screenshots/terraform_create_ec2_instance.png" width="950" title="Create EC2 instance">
   <br>
-  <em>Fig 9.: Launching EC2 instance </em>
+  <em>Fig 10.: Launching EC2 instance </em>
 </p>
 
 
@@ -244,7 +244,7 @@ resource "aws_ebs_volume" "web_server_volume" {
 <p align="center">
   <img src="/screenshots/terraform_create_ebs_volume.png" width="950" title="EBS Volume">
   <br>
-  <em>Fig 10.: Create EBS Volume </em>
+  <em>Fig 11.: Create EBS Volume </em>
 </p>
 
 
@@ -328,7 +328,7 @@ We can also use **password** in case, we have configured password based authenti
 <p align="center">
   <img src="/screenshots/terraform_install_python3_in_remote.png" width="950" title="Automation using Ansible">
   <br>
-  <em>Fig 11.: Installation of Python Packages </em>
+  <em>Fig 12.: Installation of Python Packages </em>
 </p>
 
 
@@ -348,7 +348,7 @@ In `remote-exec` provisioners, we can use any one of following attributes:
 <p align="center">
   <img src="/screenshots/terraform_invoke_ansible_playbook.png" width="950" title="Automation using Ansible">
   <br>
-  <em>Fig 12.: Configuration and Installation of Web Server Packages </em>
+  <em>Fig 13.: Configuration and Installation of Web Server Packages </em>
 </p>
 
 
@@ -426,14 +426,14 @@ resource "aws_s3_bucket_object" "website_image_files" {
 <p align="center">
   <img src="/screenshots/terraform_upload_images.png" width="950" title="Upload Images">
   <br>
-  <em>Fig 13.: Upload Images (Terraform Plan) </em>
+  <em>Fig 14.: Upload Images (Terraform Plan) </em>
 </p>
 
 
 <p align="center">
   <img src="/screenshots/terraform_upload_images_success.png" width="950" title="Upload Images">
   <br>
-  <em>Fig 14.: Upload Images (Terraform Apply) </em>
+  <em>Fig 15.: Upload Images (Terraform Apply) </em>
 </p>
 
 
@@ -614,7 +614,7 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 1. Create new Freestyle Job with name code_deployment
 
 <p align="center">
-  <img src="/screenshots/code_deployment.png" width="650" title="Code Deployment Job">
+  <img src="/screenshots/code_deployment.png" width="950" title="Code Deployment Job">
   <br>
   <em>Fig 16.: Job Creation </em>
 </p>
@@ -622,7 +622,7 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 2. Configure Project URL
 
 <p align="center">
-  <img src="/screenshots/code_deployment_project_description.png" width="650" title="Project URL Configuration">
+  <img src="/screenshots/code_deployment_project_description.png" width="950" title="Project URL Configuration">
   <br>
   <em>Fig 17.: Project URL Configuration </em>
 </p>
@@ -630,7 +630,7 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 3. Configure Git SCM 
 
 <p align="center">
-  <img src="/screenshots/code_deployment_project_description.png" width="650" title="Github Repository Configuration">
+  <img src="/screenshots/code_deployment_project_description.png" width="950" title="Github Repository Configuration">
   <br>
   <em>Fig 18.:  GitHub Repository Configuration </em>
 </p>
@@ -640,7 +640,7 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 Currently we don't have public connectivity from Github to local Jenkins Server. So, we will be using *Poll SCM* as trigger.
 
 <p align="center">
-  <img src="/screenshots/code_deployment_build_triggers.png" width="650" title="Build Trigger Configuration">
+  <img src="/screenshots/code_deployment_build_triggers.png" width="950" title="Build Trigger Configuration">
   <br>
   <em>Fig 19.:  Build Trigger Configuration </em>
 </p>
@@ -650,7 +650,7 @@ Currently we don't have public connectivity from Github to local Jenkins Server.
 Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is present in the repository at location *jenkins_script/code_deployment.sh*
 
 <p align="center">
-  <img src="/screenshots/code_deployment_build_step.png" width="650" title="Build Step Configuration">
+  <img src="/screenshots/code_deployment_build_step.png" width="950" title="Build Step Configuration">
   <br>
   <em>Fig 20.:  Build Step Configuration </em>
 </p>
@@ -664,7 +664,7 @@ Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is 
 2. Configure Project URL
 
 <p align="center">
-  <img src="/screenshots/infrastructure_deployment_description.png" width="650" title="Project URL">
+  <img src="/screenshots/infrastructure_deployment_description.png" width="950" title="Project URL">
   <br>
   <em>Fig 21.:  Project URL </em>
 </p>
@@ -672,7 +672,7 @@ Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is 
 3. Git Configuration
 
 <p align="center">
-  <img src="/screenshots/code_deployment_scm.png" width="650" title="SCM">
+  <img src="/screenshots/infrastructure_deployment_scm.png" width="950" title="SCM">
   <br>
   <em>Fig 22.:  Source Code Management </em>
 </p>
@@ -682,22 +682,23 @@ Click on `Execute Shell` form the `Add Build Step` dropdown. The Bash script is 
 	The job will be triggered only on successful/stable execution of `code_deployment` Job.
 	
 <p align="center">
-  <img src="/screenshots/code_deployment_build_trigger.png" width="650" title="Build Trigger Configuration">
+  <img src="/screenshots/infrastructure_deployment_build_trigger.png" width="950" title="Build Trigger Configuration">
   <br>
   <em>Fig 23.:  Build Trigger Configuration </em>
 </p>
 
 5. Build Step
 
-	In Build Step we will be copying our automation code in `/opt/aws_infra` directory. The directory will help us in maintaining the terraform state. We can also upload the terraform state to S3 and utilise whenver a build is triggered.
+	In Build Step we will be copying our automation code in `/opt/aws_infra` directory. The directory will help us in maintaining the terraform state. We can also upload the terraform state to S3 and utilise whenver a build is triggered. The bash script is present in repository at location *jenkins_script/infrastructure_deployment.sh*
 	
 <p align="center">
-  <img src="/screenshots/code_deployment_build.png" width="650" title="Build Step Configuration">
+  <img src="/screenshots/infrastructure_deployment_build.png" width="950" title="Build Step Configuration">
   <br>
   <em>Fig 20.:  Build Step </em>
 </p>
 
 6. Save and Apply
+
 
 > **Source**: LinuxWorld Informatics Pvt Ltd. Jaipur
 >
