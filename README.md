@@ -601,6 +601,11 @@ terraform destroy -auto-approve
 
 
 
+## Integration of Jenkins with Terraform
+
+**In progress**
+Deadline 17 June 11 PM
+
 > **Source**: LinuxWorld Informatics Pvt Ltd. Jaipur
 >
 > **Under the Guidance of** : [Vimal Daga](https://in.linkedin.com/in/vimaldaga)
