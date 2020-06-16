@@ -30,13 +30,10 @@ variable "connection_user" {
 
 variable "instance_ami_id" {
         type = string
-        default = "ami-052c08d70def0ac62"
 }
-
 
 variable "s3_image_bucket_name" {
         type = string
-        default = "website-image-source"
 }
 
 variable "bucket_acl" {
@@ -50,14 +47,10 @@ variable "force_destroy_bucket" {
         description = "Parmater indicates that the objects from the bucket to be deleted, so that bucket can be destroyed without error"
 }
 
-
 variable "s3_origin_id"{
         type = string
-        default = "imagesS3Origin"
         description = "Origin Name for the Cloudfront Destirbution"
 }
-
-
 
 variable "cache_allowed_methods" {
         type = list(string)
@@ -70,7 +63,6 @@ variable "cached_methods" {
         default = ["GET", "HEAD"]
         description = "List of cached methods (e.g. GET, PUT, POST, DELETE, HEAD)"
 }
-
 
 variable "default_ttl" {
   type        = number
