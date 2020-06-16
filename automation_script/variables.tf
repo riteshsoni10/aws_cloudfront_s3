@@ -116,6 +116,16 @@ variable "geo_restriction_locations" {
   description = "List of country codes for which  CloudFront either to distribute content (whitelist) or not distribute your content (blacklist)"
 }
 
+variable "enabled"{
+        type = bool
+        default = true
+}
+
+variable "ipv6_enabled" {
+        type = bool
+        default = true
+}
+
 variable "compression_objects_enable" {
         type = bool
         default = true
