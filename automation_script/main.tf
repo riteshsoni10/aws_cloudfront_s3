@@ -126,18 +126,33 @@ resource "aws_s3_bucket" "s3_image_store" {
         force_destroy = var.force_destroy_bucket
 }
 
+#The Below commented code is to be used only when Jenkins Automation system is not used
+# Cloning git code repository
+#resource "null_resource" "download_website_code"{
+#        depends_on = [
+#                aws_s3_bucket.s3_image_store
+#        ]
+#        provisioner local-exec {
+#                command = 
+#                "rm -rf /opt/code/*"
+#                "git clone https://github.com/riteshsoni10/demo_website.git /opt/code/"
+#        }
+#}
+
+
 
 # Upload all the website images to S3 bucket
 resource "aws_s3_bucket_object" "website_files" {
-        depends_on = [
-                null_resource.download_website_code,
-        ]
-        for_each      = fileset("/opt/images/", "**/*.*")
+        # The below code is commented and only to be used when not using Jenkins for automation
+        #depends_on = [
+        #        null_resource.download_website_code,
+        #]
+        for_each      = fileset("/opt/code/images/", "**/*.*")
         bucket        = aws_s3_bucket.s3_image_store.bucket
-        key           = replace(each.value, "/opt/images/", "")
-        source        = "/opt/images/${each.value}"
+        key           = replace(each.value, "/opt/code/images/", "")
+        source        = "/opt/code/images/${each.value}"
         acl           = "public-read"
-        etag          = filemd5("/opt/images/${each.value}")
+        etag          = filemd5("/opt/code/images/${each.value}")
 }
 
 
