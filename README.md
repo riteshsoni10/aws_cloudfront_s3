@@ -549,6 +549,53 @@ terraform destroy -auto-approve
 ```
 
 
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| region_name | Default Region Name for Infrastructure and S3 Bucket | string | `` | yes |
+| user_profile | IAM Credentials of AWS Account with required priviledges | string | `` | yes |
+| instance_ami_id | AMI Id for launching EC2 Instances | string | `` | yes |
+| instance_type | EC2 Instance Type | string | `` | yes |
+| automation_public_ip | Controller Node Public IP to allow ssh connection on EC2 instance | string | `0.0.0.0/0` | no |
+| connection_user | Username for SSH connection to EC2 instance | string | `ec2-user` | yes |
+| connection_type | Type of connection for remote-exec provisioner like (ssh,winrm) | string | `ssh` | no |
+| s3_image_bucket_name | S3 bucket name | string | `` | yes |
+| force_destroy_bucket | Delete all objects from the bucket so that the bucket can be destroyed without error (e.g. `true` or `false`) | bool | `true` | no |
+| s3_origin_id | S3 Origin Name for Cloudfront Distribution | string | `` | yes |
+| bucket_acl | ACL Permissions for S3 bucket | string | `private` | no |
+| cache_allowed_methods | List of allowed methods (e.g. GET, PUT, POST, DELETE, HEAD) for AWS CloudFront | list(string) | `<list>` | no |
+| cached_methods | List of cached methods (e.g. GET, PUT, POST, DELETE, HEAD) | list(string) | `<list>` | no |
+| compression_objects_enable | Parameter for compression of content served using Cloudfront Distribution for web requests | bool | `true` | no |
+| default_ttl | Default amount of time (in seconds) that an object is in a CloudFront cache | number | `60` | no |
+| max_ttl | Maximum amount of time (in seconds) that an object is in a CloudFront cache | number | `31536000` | no |
+| min_ttl | Minimum amount of time that you want objects to stay in CloudFront caches | number | `0` | no |
+| enabled | Select Enabled if you want CloudFront to begin processing requests as soon as the distribution is created, or select Disabled if you do not want CloudFront to begin processing requests after the distribution is created. | bool | `true` | no |
+| ipv6_enabled | Set to true to ipv6 | bool | `true` | no |
+| geo_restriction_locations | List of country codes for which  CloudFront either to distribute content (whitelist) or not distribute your content (blacklist) | list(string) | `<list>` | no |
+| geo_restriction_type | Method that use to restrict distribution of your content by country: `none`, `whitelist`, or `blacklist` | string | `none` | no |
+| price_class | Price class for this distribution: `PriceClass_All`, `PriceClass_200`, `PriceClass_100` | string | `PriceClass_100` | no |
+| viewer_protocol_policy | allow-all, redirect-to-https | string | `redirect-to-https` | no |
+| wait_for_deployment | When set to 'true' the resource will wait for the distribution status to change from InProgress to Deployed | bool | `true` | no |
+
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| instance_key | Key Pair Name used during launching EC2 instance |
+| security_group_name | Name of Security Group Attached with EC2 instance |
+| ec2_instance_public_ip | Public IP of EC2 instance |
+| ebs_volume |ID of EBS Volume |
+| s3_bucket | Name of S3 bucket |
+| s3_bucket_domain_name | Domain of S3 bucket |
+| cf_id | ID of AWS CloudFront distribution |
+| cf_status | Current status of the distribution |
+| cf_domain_name | Domain name corresponding to the distribution |
+
+
+
 > **Source**: LinuxWorld Informatics Pvt Ltd. Jaipur
 >
 > **Under the Guidance of** : [Vimal Daga](https://in.linkedin.com/in/vimaldaga)
