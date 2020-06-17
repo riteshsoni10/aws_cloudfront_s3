@@ -706,7 +706,7 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 
 ## EBS Snapshot
 
-The backup of EBS Volume for older data to be preserved in case of instance crash, or hacked. The EBS Volume is very helpful is retaining the data stored. We are charged only for the amount of the data stored in EBS Volume in case of EBS Snapshot.
+The backup of EBS Volume is taken with purpose to preserve data in case of instance crash, or hacked. The EBS Volume is very helpful is retaining the data stored. We are charged only for the amount of the data stored in EBS Volume in case of EBS Snapshot.
 
 HCL Code for creation of EBS Backup
 
