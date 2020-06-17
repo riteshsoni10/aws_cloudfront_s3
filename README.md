@@ -543,6 +543,7 @@ resource "null_resource" "configure_image_url" {
 
 
 # Usage Instructions
+
 You should have configured IAM profile in the controller node by following instructions.
 
 1. Clone this repository
@@ -704,8 +705,8 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 
 
 ## EBS Snapshot
-	
-	The backup of EBS Volume for older data to be preserved in case of instance crash, or hacked. The EBS Volume is very helpful is retaining the data stored. We are charged only for the amount of the data stored in EBS Volume in case of EBS Snapshot.
+
+The backup of EBS Volume for older data to be preserved in case of instance crash, or hacked. The EBS Volume is very helpful is retaining the data stored. We are charged only for the amount of the data stored in EBS Volume in case of EBS Snapshot.
 
 HCL Code for creation of EBS Backup
 
