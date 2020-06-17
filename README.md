@@ -11,13 +11,13 @@ Automated resource creation in AWS Public Cloud using Jenkins to execute terrafo
 ## Scope of this project
 1. [Create the key pair](#create-key-pair)
 2. [Create security group which allow the port 80](#create-security-groups)
-2. [Launch EC2 instance](#launch-ec2-instance)
-3. In this Ec2 instance use the key and security group which we have created in step 1.
-4. [Launch one Volume (EBS)](#create-ebs-volume) and [mount that volume into /var/www/html](#configuration-changes-using-ansible-automation)
-5. Developer have uploded the code into github repo also the repo has some images.
-6. Copy the github repo code into /var/www/html
-7. [Create S3 bucket](#s3-bucket), and [copy/deploy the images from github repo into the s3 bucket and change the permission to public readable](#upload-images-to-s3-bucket).
-8 [Create a Cloudfront using s3 bucket(which contains images)](#cloudfront-distribution) and [use the Cloudfront URL to  update in code in /var/www/html](#configure-website-to-use-cdn-domain)
+3. [Launch EC2 instance](#launch-ec2-instance)
+4. In this Ec2 instance use the key and security group which we have created in step 1.
+5. [Launch one Volume (EBS)](#create-ebs-volume) and [mount that volume into /var/www/html](#configuration-changes-using-ansible-automation)
+6. Developer have uploded the code into github repo also the repo has some images.
+7. Copy the github repo code into /var/www/html
+8. [Create S3 bucket](#s3-bucket), and [copy/deploy the images from github repo into the s3 bucket and change the permission to public readable](#upload-images-to-s3-bucket).
+9. [Create a Cloudfront using s3 bucket(which contains images)](#cloudfront-distribution) and [use the Cloudfront URL to  update in code in /var/www/html](#configure-website-to-use-cdn-domain)
 
 **Extra-Addons**
 1) [Integration of terraform with jenkins](#integration-of-jenkins-with-terraform) 
@@ -516,7 +516,7 @@ resource "aws_cloudfront_distribution" "image_distribution" {
 We have used Cloudfront's, but custom aliases and SSL certificates can also be used
 
 
-### Configure Wesbite to use CDN domain 
+### Configure Website to use CDN domain 
 
 We will be using remote-exec provisioner to replace the src with CDN domain name. The resource will be dependent on CDN and invoke playbook resource
 
