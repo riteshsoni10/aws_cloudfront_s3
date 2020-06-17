@@ -9,18 +9,19 @@ Automated resource creation in AWS Public Cloud using Jenkins to execute terrafo
 </p>
 
 ## Scope of this project
-1. Create the key and security group which allow the port 80.
-2. Launch EC2 instance.
+1. [Create the key pair](#create-key-pair)
+2. [Create security group which allow the port 80](#create-security-groups)
+2. [Launch EC2 instance](#launch-ec2-instance)
 3. In this Ec2 instance use the key and security group which we have created in step 1.
-4. Launch one Volume (EBS) and mount that volume into /var/www/html
+4. [Launch one Volume (EBS)](#create-ebs-volume) and [mount that volume into /var/www/html](#configuration-changes-using-ansible-automation)
 5. Developer have uploded the code into github repo also the repo has some images.
 6. Copy the github repo code into /var/www/html
-7. Create S3 bucket, and copy/deploy the images from github repo into the s3 bucket and change the permission to public readable.
-8 Create a Cloudfront using s3 bucket(which contains images) and use the Cloudfront URL to  update in code in /var/www/html
+7. [Create S3 bucket](#s3-bucket), and [copy/deploy the images from github repo into the s3 bucket and change the permission to public readable](#upload-images-to-s3-bucket).
+8 [Create a Cloudfront using s3 bucket(which contains images)](#cloudfront-distribution) and [use the Cloudfront URL to  update in code in /var/www/html](#configure-website-to-use-cdn-domain)
 
-*Optional*
-1) Those who are familiar with jenkins or are in devops AL have to integrate jenkins in this task wherever you feel can be integrated
-2) create snapshot of ebs
+**Extra-Addons**
+1) [Integration of terraform with jenkins](#integration-of-jenkins-with-terraform) 
+2) [Create snapshot of ebs](#ebs-snapshot)
 
 
 The **website code** that is used in this repository for *deployment* on EC2 web server [Github URL](https://github.com/riteshsoni10/demo_website.git)
@@ -157,7 +158,7 @@ resource "aws_key_pair" "instance_key_pair"{
 </p>
 
  
- ### Create Security  Groups
+ ### Create Security Groups
  
  We will be allowing HTTP protocol and SSH access to our EC2 instance from worldwide.
  
@@ -659,7 +660,7 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 6. **Save and Apply**
 
 
-## Job2 : Infrastructure Deployement
+### Job2 : Infrastructure Deployement
 
 1. Same as in `Job1`
 
@@ -700,6 +701,25 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 </p>
 
 6. **Save and Apply**
+
+
+## EBS Snapshot
+	
+	The backup of EBS Volume for older data to be preserved in case of instance crash, or hacked. The EBS Volume is very helpful is retaining the data stored. We are charged only for the amount of the data stored in EBS Volume in case of EBS Snapshot.
+
+HCL Code for creation of EBS Backup
+
+```sh
+resource "aws_ebs_snapshot" "volume_backup" {
+	depends_on = [
+		aws_volume_attachment.ec2_volume_attach
+	]
+	volume_id = "${aws_ebs_volume.web_server_volume.id}"
+	tags = {
+    		Name = "Web Server Volume Backup"
+  	}
+}
+```
 
 
 
