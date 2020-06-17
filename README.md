@@ -631,7 +631,7 @@ Now, if you want to get yourself relieved from all the manual terraform commands
 3. **Configure Git SCM** 
 
 <p align="center">
-  <img src="/screenshots/code_deployment_project_description.png" width="950" title="Github Repository Configuration">
+  <img src="/screenshots/code_deployment_scm.png" width="950" title="Github Repository Configuration">
   <br>
   <em>Fig 18.:  GitHub Repository Configuration </em>
 </p>
