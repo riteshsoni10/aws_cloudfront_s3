@@ -122,7 +122,6 @@ resource "aws_s3_bucket" "s3_image_store" {
                 Name = "WebPage Image Source"
 
         }
-        region = var.region_name
         force_destroy = var.force_destroy_bucket
 }
 
