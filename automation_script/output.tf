@@ -25,17 +25,14 @@ output "s3_bucket_domain_name" {
 
 output "cf_id" {
   value       = aws_cloudfront_distribution.image_distribution.id
-  description = "ID of AWS CloudFront distribution"
 }
 
 output "cf_status" {
   value       = aws_cloudfront_distribution.image_distribution.status
-  description = "Current status of the distribution"
 }
 
 output "cf_domain_name" {
   value       = aws_cloudfront_distribution.image_distribution.domain_name
-  description = "Domain name corresponding to the distribution"
 }
 
 output "website_s3_files_upload" {
